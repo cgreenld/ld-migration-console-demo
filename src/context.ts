@@ -17,12 +17,6 @@ interface Organization {
     name: string
 }
 
-const readOldStates = ["off", "dualwrite", "shadow", "live"]
-const writeOldStates = ["off", "dualwrite", "shadow", "live", "rampdown"]
-const readNewStates = ["shadow", "live", "rampdown", "complete"]
-const writeNewStates = ["dualwrite", "shadow", "live", "rampdown", "complete"]
-const useNewStates = ["live", "rampdown", "complete"]
-
 class Context implements Evaluatable {
     private readonly ldClient: LDClient
     private readonly ldContext: LDContext
@@ -46,13 +40,9 @@ class Context implements Evaluatable {
     }
 
     async evaluate() {
-        const flagValue = await this.ldClient.variation("database-migration", this.ldContext, "off")
+        const flagValue = await this.ldClient.variation("new-feature-sample", this.ldContext, "off")
         return {
-            readOld: readOldStates.includes(flagValue),
-            readNew: readNewStates.includes(flagValue),
-            writeOld: writeOldStates.includes(flagValue),
-            writeNew: writeNewStates.includes(flagValue),
-            useNew: useNewStates.includes(flagValue),
+            value: flagValue
         }
     }
 }

@@ -4,21 +4,17 @@ import fs from "node:fs"
 import { Evaluatable, Evaluation } from "./evaluation.js"
 
 function RenderReadString(enabled: boolean, authoritative: boolean) {
-    return enabled ? chalk.greenBright(authoritative ? chalk.bold.underline("R") : "r") : chalk.gray("r")
+    return enabled ? chalk.greenBright(authoritative ? chalk.bold.underline("Enabled") : "Enabled") : chalk.gray("Disabled")
 }
 
-function RenderWriteString(enabled: boolean, authoritative: boolean) {
-    return enabled ? chalk.greenBright(authoritative ? chalk.bold.underline("W") : "w") : chalk.gray("w")
-}
+// function RenderWriteString(enabled: boolean, authoritative: boolean) {
+//     return enabled ? chalk.greenBright(authoritative ? chalk.bold.underline("W") : "w") : chalk.gray("w")
+// }
 
 function RenderEvaluation(evaluation: Evaluation) {
     const components = [
         chalk.white("["),
-        RenderReadString(evaluation.readOld, !evaluation.useNew),
-        RenderWriteString(evaluation.writeOld, !evaluation.useNew),
-        chalk.white(" -> "),
-        RenderReadString(evaluation.readNew, evaluation.useNew),
-        RenderWriteString(evaluation.writeNew, evaluation.useNew),
+        RenderReadString(evaluation.value, !evaluation.value),
         chalk.white("]"),
     ]
     return components.join("")
@@ -34,8 +30,8 @@ export default async function Render(evaluateables: Evaluatable[]) {
     fs.writeSync(
         1,
         `│                                                   ${chalk.bold.underline(
-            "MIGRATION PROGRESSION",
-        )}                                                  │\n`,
+            "RELEASE PROGRESSION",  
+        )}                                                    │\n`,
     )
     fs.writeSync(
         1,
@@ -43,9 +39,9 @@ export default async function Render(evaluateables: Evaluatable[]) {
     )
     fs.writeSync(
         1,
-        `│                          ${chalk.gray("Function Disabled")}          ${chalk.greenBright(
-            "Function Enabled",
-        )}          ${chalk.bold.underline("AUTHORITATIVE SOURCE")}                       │\n`,
+        `│                                          ${chalk.gray("Feature Disabled")}          ${chalk.greenBright(
+            "Feature Enabled"   ,              
+        )}                                       │\n`,
     )
     fs.writeSync(
         1,
@@ -55,11 +51,15 @@ export default async function Render(evaluateables: Evaluatable[]) {
         1,
         "│                                                                                                                          │\n",
     )
+    
     evaluations.forEach((evaluation, index) => {
         if (index % 10 == 0) {
             fs.writeSync(1, "│  ")
         }
         fs.writeSync(1, RenderEvaluation(evaluation) + "  ")
+        if(evaluation.value == true) {
+            fs.writeSync(1, " ")
+        }
         if (index % 10 == 9) {
             fs.writeSync(1, "│\n")
             fs.writeSync(1, "│                                                                                                                          │\n")

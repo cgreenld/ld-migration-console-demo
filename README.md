@@ -27,7 +27,7 @@ To run this demo, you will need to have Node.js 16+ installed on your workstatio
 yarn to install dependencies, build the application, and optionally run it.
 
 The demo requires access to a LaunchDarkly project with at least one environment, and a flag with the key 
-"database-migration".  This flag must have six variations, each with the following keys.
+"new-feature-sample".  This flag must have six variations, each with the following keys.
 
 - "off" - The off state of the migration, where the read and write traffic only occurs on the legacy database.
 - "dualwrite" - The initial CDC stage of the migration, where we start writing data to our new database as well.
